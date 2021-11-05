@@ -1,0 +1,20 @@
+{
+  "name": "meme_list_generator--level_3_group_capstone",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mahfuu/3.0-Group_Capstone-Meme_List_Generator.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mahfuu/3.0-Group_Capstone-Meme_List_Generator/issues"
+  },
+  "homepage": "https://github.com/mahfuu/3.0-Group_Capstone-Meme_List_Generator#readme"
+}
