@@ -1,6 +1,8 @@
 import React from "react"
 import axios from "axios"
 
+import Meme from "./Meme"
+
 // Be sure to create components and send down props.  Style all components (add a css file).
 
 class Main extends React.Component {
@@ -11,11 +13,20 @@ class Main extends React.Component {
             bottomText: "",
             url: "",
             id: "",
-            name: ""
+            name: "",
+            isEditing: false
         },
         memeList: [],
         memeSaveId: 100,
         refreshCount: 0,
+        memeEdit: {
+            topText: "",
+            bottomText: "",
+            url: "",
+            id: "",
+            name: "",
+            isEditing: false
+        }
     }
 
     componentDidMount(){
@@ -74,43 +85,89 @@ class Main extends React.Component {
                 bottomText: "",
                 url: "",
                 id: "",
-                name: ""
+                name: "",
+                isEditing: false
             }
         }))
         this.getImage()
     }
 
     handleDelete = (e, memeID) => {
-        console.log("delete meme", memeID)
-        console.log(e.target)
+        console.log("handle delete")
         this.setState(prevState => ({
             memeList: prevState.memeList.filter(meme => meme.id !== memeID)
         }))
     }
 
-    // handleEdit is not yet functioning
-
     handleEdit = (e, memeID) => {
-        console.log("edit meme", memeID)
-        console.log(e.target)
-        // Find this meme
-        // preview it with inputs in order to change text
-        // regenerate it with new state
+        console.log("handle edit")
+        this.setState(prevState => ({
+            memeList: prevState.memeList.map(prevMeme => (
+                prevMeme.id === memeID ?
+                {   
+                    ...prevMeme,
+                    isEditing: !prevMeme.isEditing
+                } :
+                prevMeme
+            ))
+        }))
+        this.setState(prevState => ({
+            memeEdit: prevState.memeList.find(prevMeme => (
+                prevMeme.id === memeID ?
+                {...prevMeme} :
+                null
+            ))  
+        }))
+        
+    }
+
+    handleEditChange = e => {
+        const {name, value} = e.target
+        this.setState(prevState => ({
+            memeEdit: {...prevState.memeEdit, [name]: value}
+        }))
+    }
+
+    handleSaveChanges = (e, memeID) => {
+        e.preventDefault()
+        console.log(memeID)
+        this.setState(prevState => ({
+            memeList: prevState.memeList.map(prevMeme => (
+                prevMeme.id === memeID ?
+                {   
+                    ...prevState.memeEdit,
+                    isEditing: !prevMeme.isEditing
+                } :
+                prevMeme
+            )),
+            memeEdit: 
+                {
+                    topText: "",
+                    bottomText: "",
+                    url: "",
+                    id: "",
+                    name: "",
+                    isEditing: false
+                }
+        }))
     }
 
     componentDidUpdate(){
-        console.log(this.state.memeList)
+        console.log(this.state.refreshCount)
     }
 
     render(){
         const savedMemes = this.state.memeList.map(meme => (
-            <div key={meme.id}>
-                <img src= {meme.url} alt= {meme.name} />
-                <h2>{meme.topText}</h2>
-                <h2>{meme.bottomText}</h2>
-                <button onClick= {(e) => this.handleDelete(e, meme.id)}>Delete</button>
-                <button onClick= {(e) => this.handleEdit(e, meme.id)}>Edit</button>
-            </div>
+            <Meme
+                key={meme.id}
+                data={meme}
+                delete={this.handleDelete}
+                edit={this.handleEdit}
+                handleChange={this.handleEditChange}
+                handleSave={this.handleSaveChanges}
+                topValue={this.state.memeEdit.topText}
+                bottomValue={this.state.memeEdit.bottomText}
+            />
         ))
         return(
             <main>
